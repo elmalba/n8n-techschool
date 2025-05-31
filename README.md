@@ -52,5 +52,36 @@ for (const item of $input.all()) {
   item.json.Ambiente = "-test";
   item.json.RandomPokemon = Math.floor(Math.random() * 1025) + 1;
 }
-return $input.all();```
+return $input.all();
+```
+### 3. Nodo HTTP Request - Consultar PokéAPI
+
+- **Método:** `GET`  
+- **URL:**
+
+```bash
+https://pokeapi.co/api/v2/pokemon/{{ $json.RandomPokemon }}
+```
+⚙️ Este paso permite obtener los datos del Pokémon generado aleatoriamente.
+
+### 4. Nodo HTML
+
+- Operación: Generate HTML Template
+- Contenido: copia el HTML desde el archivo index.html incluido en este repositorio.
+
+Puedes utilizar expresiones dentro del HTML como:
+```bash
+{{ $('Code').item.json.displayName }}
+```
+🖼️ Esto permite insertar valores dinámicos en la plantilla HTML.
+
+### 5. Nodo Respond to Webhook
+
+-Tipo de respuesta: Text
+-Contenido de respuesta:
+
+```bash
+{{ $json.html }}
+```
+✅ Este paso devuelve el HTML generado al cliente que realizó la solicitud al Webhook.
 
