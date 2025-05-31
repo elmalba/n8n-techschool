@@ -136,9 +136,43 @@ for (const item of $input.all()) {
 return $input.all();
 ```
 
+### 2. Agrega un nodo **Code**
+
+Este nodo genera:
+- Un filtro para tener los feriados del futuro
+
+```javascript
+function isFuture(dateInput) {
+  const target = dateInput instanceof Date ? dateInput : new Date(dateInput);
+  if (Number.isNaN(target.getTime())) {
+    throw new Error('Fecha inválida');
+  }
+  const now = Date.now();      // Momento actual
+  return target.getTime() > now;
+}
+
+for (const item of $input.all()) {
+  item.json.myNewField = 1;
+  item.json.data = item.json.data.filter(e=>isFuture(e.date))  
+}
+
+return $input.all();
+```
+
+
+### 5. Nodo Respond to Webhook
+
+-Tipo de respuesta: Text
+-Contenido de respuesta:
+
+```bash
+{{ $json.data }}
+```
 
 
 😎😎😎 Genial ahora vamos a crear los siguiente workflows de Valores Api
+
+
 
 ### 1. Crear el nodo Webhook
 
@@ -151,9 +185,17 @@ return $input.all();
 
 ![Paso 2 - Webhook](webhook2.png)
 
+### 3. Crear HTTP Request
+
+- Visitar el sitio  https://docs.boostr.cl/reference/holidays
+- Agrega un nodo **HTTP Request**.
+- Selecciona: `Import Crurl`
+
+![Paso 2 - Webhook](http_request.png)
+
 ---
 
-### 2. Agrega un nodo **Code**
+### 3. Agrega un nodo **Code**
 
 Este nodo genera:
 - Un filtro para tener los feriados del futuro
