@@ -54,6 +54,8 @@ for (const item of $input.all()) {
 }
 return $input.all();
 ```
+![Paso 1 - Webhook](code.PNG)
+
 ### 3. Nodo HTTP Request - Consultar PokéAPI
 
 - **Método:** `GET`  
@@ -63,6 +65,9 @@ return $input.all();
 https://pokeapi.co/api/v2/pokemon/{{ $json.RandomPokemon }}
 ```
 ⚙️ Este paso permite obtener los datos del Pokémon generado aleatoriamente.
+
+![Paso 1 - Webhook](http.PNG)
+
 
 ### 4. Nodo HTML
 
@@ -75,6 +80,8 @@ Puedes utilizar expresiones dentro del HTML como:
 ```
 🖼️ Esto permite insertar valores dinámicos en la plantilla HTML.
 
+![Paso 1 - Webhook](html_node.PNG)
+
 ### 5. Nodo Respond to Webhook
 
 -Tipo de respuesta: Text
@@ -85,3 +92,4 @@ Puedes utilizar expresiones dentro del HTML como:
 ```
 ✅ Este paso devuelve el HTML generado al cliente que realizó la solicitud al Webhook.
 
+![Paso 1 - Webhook](webhook3.png)
