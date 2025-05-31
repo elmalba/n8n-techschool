@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Personal - Javier</title>
+    <title>Dashboard Personal </title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -283,7 +283,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>¡Hola Javier!</h1>
+            <h1>¡Hola {{ $('Code').item.json.displayName }}!</h1>
             <p>Tu dashboard personal está listo</p>
         </div>
 
@@ -352,9 +352,9 @@
                 <div class="card-title">Buscar Canción en Spotify</div>
                 <div class="card-content">
                     <div class="input-group">
-                        <input type="text" class="input-field" placeholder="Ingresa el nombre de una canción...">
+                        <input id="spotify" type="text" class="input-field" placeholder="Ingresa el nombre de una canción...">
                         <button class="btn">
-                            <i class="fas fa-search"></i> Buscar
+                            <i class="fas fa-search"></i> Reproducir
                         </button>
                     </div>
                 </div>
@@ -400,24 +400,264 @@
             });
         }
 
+        // Function to fetch real-time data from API
+        async function fetchApiData() {
+            try {
+                const response = await fetch('/webhook/valoresApi');
+                const data = await response.json();
+                
+                // Update temperature
+                const temperatureElement = document.querySelector('.weather-item:nth-child(1) .value');
+                if (temperatureElement && data.temperatura !== undefined) {
+                    temperatureElement.textContent = `${data.temperatura}°C`;
+                }
+                
+                // Update dollar value
+                const dollarElement = document.querySelector('.weather-item:nth-child(2) .value');
+                if (dollarElement && data.valorDolar !== undefined) {
+                    dollarElement.textContent = `$${data.valorDolar.toLocaleString('es-CL')}`;
+                }
+                
+                // Update UF value
+                const ufElement = document.querySelector('.weather-item:nth-child(3) .value');
+                if (ufElement && data.valorUF !== undefined) {
+                    ufElement.textContent = data.valorUF.toLocaleString('es-CL');
+                }
+                
+                console.log('Datos actualizados:', data);
+            } catch (error) {
+                console.error('Error al obtener datos de la API:', error);
+            }
+        }
+
+        // Function to fetch holidays data from API
+        async function fetchHolidays() {
+            try {
+                const response = await fetch('/webhook/feriados');
+                const holidays = await response.json();
+                
+                // Find all upcoming holidays
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Set to start of day for comparison
+                
+                const upcomingHolidays = holidays
+                    .map(holiday => ({
+                        ...holiday,
+                        dateObj: new Date(holiday.date)
+                    }))
+                    .filter(holiday => holiday.dateObj >= today)
+                    .sort((a, b) => a.dateObj - b.dateObj);
+                
+                if (upcomingHolidays.length > 0) {
+                    // Find the holiday container
+                    const holidayContainer = document.querySelector('.wide-card:last-child .card-content > div > div:first-child');
+                    if (holidayContainer) {
+                        // Clear existing content
+                        holidayContainer.innerHTML = '<h4 style="color: #2d3748; margin-bottom: 10px;">Próximos Feriados</h4>';
+                        
+                        // Create a scrollable container for holidays
+                        const holidaysListContainer = document.createElement('div');
+                        holidaysListContainer.style.maxHeight = '200px';
+                        holidaysListContainer.style.overflowY = 'auto';
+                        holidaysListContainer.style.paddingRight = '5px';
+                        
+                        // Add each holiday
+                        upcomingHolidays.forEach((holiday, index) => {
+                            if (index < 10) { // Limit to 10 holidays to avoid too much content
+                                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                                const formattedDate = holiday.dateObj.toLocaleDateString('es-CL', options);
+                                
+                                const holidayItem = document.createElement('div');
+                                holidayItem.style.cssText = `
+                                    color: #667eea; 
+                                    font-weight: 600; 
+                                    margin-bottom: 8px; 
+                                    padding: 8px; 
+                                    background: rgba(102, 126, 234, 0.1); 
+                                    border-radius: 8px; 
+                                    font-size: 0.9rem;
+                                    border-left: 3px solid #667eea;
+                                `;
+                                
+                                holidayItem.innerHTML = `
+                                    <div style="font-weight: 700; margin-bottom: 2px;">${holiday.title}</div>
+                                    <div style="font-size: 0.8rem; color: #4a5568;">${formattedDate} • ${holiday.type}</div>
+                                `;
+                                
+                                holidaysListContainer.appendChild(holidayItem);
+                            }
+                        });
+                        
+                        holidayContainer.appendChild(holidaysListContainer);
+                    }
+                }
+                
+                console.log('Feriados actualizados:', upcomingHolidays);
+            } catch (error) {
+                console.error('Error al obtener feriados de la API:', error);
+            }
+        }
+
+        // Function to fetch meetings data from API
+        async function fetchMeetings() {
+            try {
+                const response = await fetch('/webhook/calendario');
+                const meetings = await response.json();
+                
+                // Find all upcoming meetings
+                const now = new Date();
+                
+                const upcomingMeetings = meetings
+                    .map(meeting => {
+                        let startDate;
+                        if (meeting.start.dateTime) {
+                            startDate = new Date(meeting.start.dateTime);
+                        } else if (meeting.start.date) {
+                            startDate = new Date(meeting.start.date);
+                        }
+                        
+                        return {
+                            ...meeting,
+                            startDate: startDate
+                        };
+                    })
+                    .filter(meeting => meeting.startDate && meeting.startDate >= now)
+                    .sort((a, b) => a.startDate - b.startDate);
+                
+                if (upcomingMeetings.length > 0) {
+                    // Find the meetings container
+                    const meetingsContainer = document.querySelector('.wide-card:last-child .card-content > div > div:last-child');
+                    if (meetingsContainer) {
+                        // Clear existing content
+                        meetingsContainer.innerHTML = '<h4 style="color: #2d3748; margin-bottom: 10px;">Próximas Reuniones</h4>';
+                        
+                        // Create a scrollable container for meetings
+                        const meetingsListContainer = document.createElement('div');
+                        meetingsListContainer.style.maxHeight = '200px';
+                        meetingsListContainer.style.overflowY = 'auto';
+                        meetingsListContainer.style.paddingRight = '5px';
+                        
+                        // Add each meeting
+                        upcomingMeetings.forEach((meeting, index) => {
+                            if (index < 10) { // Limit to 10 meetings to avoid too much content
+                                const isToday = meeting.startDate.toDateString() === now.toDateString();
+                                const isTomorrow = meeting.startDate.toDateString() === new Date(now.getTime() + 24 * 60 * 60 * 1000).toDateString();
+                                
+                                let dateString;
+                                if (isToday) {
+                                    dateString = `Hoy ${meeting.startDate.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}`;
+                                } else if (isTomorrow) {
+                                    dateString = `Mañana ${meeting.startDate.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}`;
+                                } else {
+                                    const options = { 
+                                        day: 'numeric', 
+                                        month: 'short',
+                                        hour: '2-digit', 
+                                        minute: '2-digit' 
+                                    };
+                                    dateString = meeting.startDate.toLocaleDateString('es-CL', options);
+                                }
+                                
+                                const meetingItem = document.createElement('div');
+                                meetingItem.style.cssText = `
+                                    color: #667eea; 
+                                    font-weight: 600; 
+                                    margin-bottom: 8px; 
+                                    padding: 8px; 
+                                    background: rgba(34, 197, 94, 0.1); 
+                                    border-radius: 8px; 
+                                    font-size: 0.9rem;
+                                    border-left: 3px solid #22c55e;
+                                `;
+                                
+                                // Clean up meeting title by removing [Daily] and other prefixes
+                                let cleanTitle = meeting.summary
+                                    .replace(/^\[Daily\]\s*/i, '')
+                                    .replace(/^\[.*?\]\s*/, '')
+                                    .trim();
+                                
+                                meetingItem.innerHTML = `
+                                    <div style="font-weight: 700; margin-bottom: 2px;">${cleanTitle}</div>
+                                    <div style="font-size: 0.8rem; color: #4a5568;">${dateString}</div>
+                                `;
+                                
+                                meetingsListContainer.appendChild(meetingItem);
+                            }
+                        });
+                        
+                        meetingsContainer.appendChild(meetingsListContainer);
+                    }
+                }
+                
+                console.log('Reuniones actualizadas:', upcomingMeetings);
+            } catch (error) {
+                console.error('Error al obtener reuniones de la API:', error);
+            }
+        }
+
         // Update times immediately and then every minute
         updateTimes();
         setInterval(updateTimes, 60000);
+        
+        // Fetch API data immediately and then every 5 minutes
+        fetchApiData();
+        setInterval(fetchApiData, 300000); // 5 minutes
+        
+        // Fetch holidays data immediately and then every hour
+        fetchHolidays();
+        setInterval(fetchHolidays, 3600000); // 1 hour
+        
+        // Fetch meetings data immediately and then every 15 minutes
+        fetchMeetings();
+        setInterval(fetchMeetings, 900000); // 15 minutes
 
-        // Add some interactivity to the search button
-        document.querySelector('.btn').addEventListener('click', function() {
-            const input = document.querySelector('.input-field');
-            if (input.value.trim()) {
-                alert(`Buscando: "${input.value}" en Spotify...`);
-            } else {
+        // Function to search Spotify
+        async function searchSpotify() {
+            const input = document.getElementById('spotify');
+            const searchQuery = input.value.trim();
+            
+            if (!searchQuery) {
                 alert('Por favor, ingresa el nombre de una canción');
+                return;
             }
-        });
+
+            try {
+                // Show loading state
+                const button = document.querySelector('.btn');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+                button.disabled = true;
+
+                // Make API call
+                const response = await fetch(`/webhook/spotify?query=${encodeURIComponent(searchQuery)}`);
+                const data = await response.json();
+                
+                console.log('Resultado de Spotify:', data);
+                
+                // Show success message
+                alert(`¡Canción encontrada! Reproduciendo: "${searchQuery}"`);
+                
+                // Clear input
+                input.value = '';
+                
+            } catch (error) {
+                console.error('Error al buscar en Spotify:', error);
+                alert('Error al buscar la canción. Inténtalo de nuevo.');
+            } finally {
+                // Restore button state
+                const button = document.querySelector('.btn');
+                button.innerHTML = '<i class="fas fa-search"></i> Reproducir';
+                button.disabled = false;
+            }
+        }
+
+        // Add interactivity to the search button
+        document.querySelector('.btn').addEventListener('click', searchSpotify);
 
         // Allow Enter key to trigger search
-        document.querySelector('.input-field').addEventListener('keypress', function(e) {
+        document.getElementById('spotify').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                document.querySelector('.btn').click();
+                searchSpotify();
             }
         });
     </script>
