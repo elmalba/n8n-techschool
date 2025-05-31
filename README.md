@@ -13,6 +13,18 @@
 ![1](n8n_formulario.PNG)
  ![1](n8n-usuario.PNG)  
 
+ ## Crear un nuevo flujo en n8n
+
+Haz clic en el botón **"New Workflow"** 
+
+ ![1](n8n-usuario.PNG)  
+
+
+Haz clic en el ícono **`+`** ubicado en la parte superior izquierda para agregar un nuevo nodo.
+
+![1](n8n-usuario.PNG)  
+
+
 ## 🔧 Pasos para construir el flujo
 
 ### 1. Crear el nodo Webhook
