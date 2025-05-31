@@ -27,7 +27,7 @@ Haz clic en el ícono **`+`** ubicado en la parte superior izquierda para agrega
 
 ## 🔧 Pasos para construir el flujo
 
-### 1. Crear el nodo Webhook
+### 1. Crear el nodo Webhook 
 
  ![1](webhook.png)  
 
@@ -98,7 +98,7 @@ Puedes utilizar expresiones dentro del HTML como:
 ![Paso 1 - Webhook](flujo.PNG)
 
 
-😎 Genial ahora vamos a crear los siguientes workflows
+😎 Genial ahora vamos a crear los siguiente workflows de feriados
 
 ### 1. Crear el nodo Webhook
 
@@ -135,5 +135,123 @@ for (const item of $input.all()) {
 
 return $input.all();
 ```
+
+
+
+😎😎😎 Genial ahora vamos a crear los siguiente workflows de Valores Api
+
+### 1. Crear el nodo Webhook
+
+ ![1](webhook.png)  
+
+- Agrega un nodo **Webhook**.
+- Método: `GET`
+- Selecciona: "Respond with other node".
+- Path: Cambiar path por "feriados"
+
+![Paso 2 - Webhook](webhook2.png)
+
+---
+
+### 2. Agrega un nodo **Code**
+
+Este nodo genera:
+- Un filtro para tener los feriados del futuro
+
+```javascript
+function isFuture(dateInput) {
+  const target = dateInput instanceof Date ? dateInput : new Date(dateInput);
+  if (Number.isNaN(target.getTime())) {
+    throw new Error('Fecha inválida');
+  }
+  const now = Date.now();      // Momento actual
+  return target.getTime() > now;
+}
+
+for (const item of $input.all()) {
+  item.json.myNewField = 1;
+  item.json.data = item.json.data.filter(e=>isFuture(e.date))  
+}
+
+return $input.all();
+```
+
+
+😎😎😎 Genial ahora vamos a crear los siguiente workflows de Calendario
+
+### 1. Crear el nodo Webhook
+
+ ![1](webhook.png)  
+
+- Agrega un nodo **Webhook**.
+- Método: `GET`
+- Selecciona: "Respond with other node".
+- Path: Cambiar path por "calendario"
+
+![Paso 2 - Webhook](webhook2.png)
+
+---
+
+### 2. Agrega un nodo **Code**
+
+Este nodo genera:
+- Un filtro para tener los feriados del futuro
+
+```javascript
+function isFuture(dateInput) {
+  const target = dateInput instanceof Date ? dateInput : new Date(dateInput);
+  if (Number.isNaN(target.getTime())) {
+    throw new Error('Fecha inválida');
+  }
+  const now = Date.now();      // Momento actual
+  return target.getTime() > now;
+}
+
+for (const item of $input.all()) {
+  item.json.myNewField = 1;
+  item.json.data = item.json.data.filter(e=>isFuture(e.date))  
+}
+
+return $input.all();
+```
+
+😎😎😎 Genial ahora vamos a crear los siguiente workflows de Calendario
+
+### 1. Crear el nodo Webhook
+
+ ![1](webhook.png)  
+
+- Agrega un nodo **Webhook**.
+- Método: `GET`
+- Selecciona: "Respond with other node".
+- Path: Cambiar path por "calendario"
+
+![Paso 2 - Webhook](webhook2.png)
+
+---
+
+### 2. Agrega un nodo **Code**
+
+Este nodo genera:
+- Un filtro para tener los feriados del futuro
+
+```javascript
+function isFuture(dateInput) {
+  const target = dateInput instanceof Date ? dateInput : new Date(dateInput);
+  if (Number.isNaN(target.getTime())) {
+    throw new Error('Fecha inválida');
+  }
+  const now = Date.now();      // Momento actual
+  return target.getTime() > now;
+}
+
+for (const item of $input.all()) {
+  item.json.myNewField = 1;
+  item.json.data = item.json.data.filter(e=>isFuture(e.date))  
+}
+
+return $input.all();
+```
+
 
 
