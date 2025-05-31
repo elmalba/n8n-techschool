@@ -17,12 +17,12 @@
 
 Haz clic en el botón **"New Workflow"** 
 
- ![1](n8n-usuario.PNG)  
+ ![1](nuevo_flujo.png)  
 
 
 Haz clic en el ícono **`+`** ubicado en la parte superior izquierda para agregar un nuevo nodo.
 
-![1](n8n-usuario.PNG)  
+![1](+.png)  
 
 
 ## 🔧 Pasos para construir el flujo
