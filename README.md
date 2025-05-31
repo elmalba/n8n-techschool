@@ -93,3 +93,5 @@ Puedes utilizar expresiones dentro del HTML como:
 ✅ Este paso devuelve el HTML generado al cliente que realizó la solicitud al Webhook.
 
 ![Paso 1 - Webhook](webhook3.png)
+
+![Paso 1 - Webhook](flujo.png)
