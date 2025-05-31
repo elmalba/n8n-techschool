@@ -6,7 +6,7 @@
 
 2. **Crea una cuenta nueva**  
    Haz clic en el botón `Get started` ubicado en la página principal.  
-   ![Inicio n8n](n8n-inicio.png)
+   ![Inicio n8n](/n8n-inicio.png)
 
 3. **Regístrate**  
    Llena el formulario de registro con tus datos. Asegúrate de definir un **nombre de usuario** que utilizarás para ingresar posteriormente.
