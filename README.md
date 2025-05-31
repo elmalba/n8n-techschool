@@ -94,4 +94,4 @@ Puedes utilizar expresiones dentro del HTML como:
 
 ![Paso 1 - Webhook](webhook3.png)
 
-![Paso 1 - Webhook](flujo.png)
+![Paso 1 - Webhook](flujo.PNG)
