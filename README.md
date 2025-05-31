@@ -162,7 +162,7 @@ return $input.all();
 
 ### 5. Nodo Respond to Webhook
 
--Tipo de respuesta: Text
+-Tipo de respuesta: JSON
 -Contenido de respuesta:
 
 ```bash
@@ -189,7 +189,7 @@ return $input.all();
 
 - Visitar el sitio  https://docs.boostr.cl/reference/holidays
 - Agrega un nodo **HTTP Request**.
-- Selecciona: `Import Crurl`
+- Selecciona: `Import Curl`
 
 ![Paso 2 - Webhook](http_request.png)
 
@@ -219,7 +219,24 @@ return $input.all();
 ```
 
 
-😎😎😎 Genial ahora vamos a crear los siguiente workflows de Calendario
+### 4. Nodo Respond to Webhook
+
+-Tipo de respuesta: JSON
+-Contenido de respuesta:
+
+```bash
+{{ $json.data }}
+```
+
+
+
+😎😎😎 Genial ahora vamos a crear los siguiente workflows de Valores APi
+
+### 0. Crear el nodo Webhook
+
+Nuestro workflow ser vera como el de la siguiente imagen, con procesos en pararelos.
+
+![Paso 2 - Webhook](valores-workflows.png)
 
 ### 1. Crear el nodo Webhook
 
@@ -228,36 +245,58 @@ return $input.all();
 - Agrega un nodo **Webhook**.
 - Método: `GET`
 - Selecciona: "Respond with other node".
-- Path: Cambiar path por "calendario"
+- Path: Cambiar path por "valoresApi"
 
 ![Paso 2 - Webhook](webhook2.png)
 
 ---
 
-### 2. Agrega un nodo **Code**
+### 2. Agrega 3 nodos de  **HTTP Request**
 
-Este nodo genera:
-- Un filtro para tener los feriados del futuro
+- Visitar los siguientes  sitio  https://api.boostr.cl/economy/indicator/uf.json ,  https://api.open-meteo.com/v1/forecast?latitude=-33.4266&longitude=-70.6085&hourly=temperature_2m ,  https://mindicador.cl/api
+- Agrega un nodo **HTTP Request**.
+- Selecciona: `Import Curl`
+
+![Paso 2 - Webhook](http_request.png)
+
+
+### 3. Crea un nodo de   **Merge**
+
+- Ajusta la configuración como la de la foto
+
+![Paso 2 - Webhook](valores-merge.png)
+
+
+### 4. Crea un nodo de   **Edit Fiels**
+
+- Cambiar el valor por el siguiente
 
 ```javascript
-function isFuture(dateInput) {
-  const target = dateInput instanceof Date ? dateInput : new Date(dateInput);
-  if (Number.isNaN(target.getTime())) {
-    throw new Error('Fecha inválida');
-  }
-  const now = Date.now();      // Momento actual
-  return target.getTime() > now;
+{
+  "valorUF": {{ $json.data.value }},
+  "valorDolar": {{ $json.dolar.valor }},
+  "temperatura":{{ $json.hourly.temperature_2m[0] }}
 }
-
-for (const item of $input.all()) {
-  item.json.myNewField = 1;
-  item.json.data = item.json.data.filter(e=>isFuture(e.date))  
-}
-
-return $input.all();
 ```
 
-😎😎😎 Genial ahora vamos a crear los siguiente workflows de Calendario
+![Paso 2 - Webhook](valores-editfields.png)
+
+
+
+### 5. Nodo Respond to Webhook
+
+-Tipo de respuesta: JSON
+-Contenido de respuesta:
+
+```bash
+{{ $json }}
+```
+
+
+
+
+
+😎😎😎 Genial ahora vamos a crear los siguiente workflows de Spotify
 
 ### 1. Crear el nodo Webhook
 
@@ -266,34 +305,35 @@ return $input.all();
 - Agrega un nodo **Webhook**.
 - Método: `GET`
 - Selecciona: "Respond with other node".
-- Path: Cambiar path por "calendario"
+- Path: Cambiar path por "spotify"
 
-![Paso 2 - Webhook](webhook2.png)
+![Paso 2 - Webhook](spotify-webhook1.png)
 
 ---
 
-### 2. Agrega un nodo **Code**
+### 2. Agrega un nodo **Spotify**
 
-Este nodo genera:
-- Un filtro para tener los feriados del futuro
+- Configura el nodo igual que en la imagen de a continuación
 
-```javascript
-function isFuture(dateInput) {
-  const target = dateInput instanceof Date ? dateInput : new Date(dateInput);
-  if (Number.isNaN(target.getTime())) {
-    throw new Error('Fecha inválida');
-  }
-  const now = Date.now();      // Momento actual
-  return target.getTime() > now;
-}
+```bash
+{{ $json.query.query }}
+```
+![Paso 2 - Webhook](spotify-search.png)
 
-for (const item of $input.all()) {
-  item.json.myNewField = 1;
-  item.json.data = item.json.data.filter(e=>isFuture(e.date))  
-}
+### 2. Agrega un nodo **Spotify**
 
-return $input.all();
+
+
+```bash
+{{ $json.album.artists[0].uri }}
 ```
 
+![Paso 2 - Webhook](spotify-player.png)
 
 
+A distrutar nuestro sitio
+
+
+### Bonus track ###
+
+Agregar ia ?
