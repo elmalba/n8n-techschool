@@ -112,8 +112,19 @@ Puedes utilizar expresiones dentro del HTML como:
 ![Paso 2 - Webhook](webhook2.png)
 
 ---
+### 3. Nodo HTTP Request - Consultar Feriados
 
-### 2. Agrega un nodo **Code**
+- **Método:** `GET`  
+- **URL:**
+
+```bash
+https://api.boostr.cl/holidays.json
+```
+⚙️ Este paso permite obtener los datos del Pokémon generado aleatoriamente.
+
+
+
+### 3. Agrega un nodo **Code**
 
 Este nodo genera:
 - Un filtro para tener los feriados del futuro
@@ -136,31 +147,10 @@ for (const item of $input.all()) {
 return $input.all();
 ```
 
-### 2. Agrega un nodo **Code**
-
-Este nodo genera:
-- Un filtro para tener los feriados del futuro
-
-```javascript
-function isFuture(dateInput) {
-  const target = dateInput instanceof Date ? dateInput : new Date(dateInput);
-  if (Number.isNaN(target.getTime())) {
-    throw new Error('Fecha inválida');
-  }
-  const now = Date.now();      // Momento actual
-  return target.getTime() > now;
-}
-
-for (const item of $input.all()) {
-  item.json.myNewField = 1;
-  item.json.data = item.json.data.filter(e=>isFuture(e.date))  
-}
-
-return $input.all();
-```
 
 
-### 5. Nodo Respond to Webhook
+
+### 4. Nodo Respond to Webhook
 
 -Tipo de respuesta: JSON
 -Contenido de respuesta:
