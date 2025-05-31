@@ -29,13 +29,13 @@ Haz clic en el ícono **`+`** ubicado en la parte superior izquierda para agrega
 
 ### 1. Crear el nodo Webhook
 
- ![1](n8n-usuario.PNG)  
+ ![1](webhook.png)  
 
 - Agrega un nodo **Webhook**.
 - Método: `GET`
 - Selecciona: "Respond with other node".
 
-![Paso 1 - Webhook](./Workflow1-Web.png)
+![Paso 1 - Webhook](webhook2.png)
 
 ---
 
@@ -52,4 +52,5 @@ for (const item of $input.all()) {
   item.json.Ambiente = "-test";
   item.json.RandomPokemon = Math.floor(Math.random() * 1025) + 1;
 }
-return $input.all();
+return $input.all();```
+
