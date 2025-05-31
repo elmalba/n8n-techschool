@@ -72,7 +72,7 @@ https://pokeapi.co/api/v2/pokemon/{{ $json.RandomPokemon }}
 ### 4. Nodo HTML
 
 - Operación: Generate HTML Template
-- Contenido: copia el HTML desde el archivo index.html incluido en este repositorio.
+- Contenido: copia el HTML desde el archivo `index.html` incluido en este repositorio.
 
 Puedes utilizar expresiones dentro del HTML como:
 ```bash
