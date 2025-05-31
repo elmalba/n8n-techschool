@@ -11,4 +11,4 @@
 4. **Regístrate**  
    Llena el formulario de registro con tus datos. Asegúrate de definir un **nombre de usuario** que utilizarás para ingresar posteriormente.
 ![1](n8n_formulario.PNG)
- ![1](n8n_inicio.png)  
+ ![1](n8n-usuario.PNG)  
